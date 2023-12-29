@@ -1,4 +1,4 @@
-name: Deploy to ${{ inputs.env }}
+name: Deploy to ${{ github.event.inputs.env }}
 inputs:
   env:
     description: 'Name of Environment'
