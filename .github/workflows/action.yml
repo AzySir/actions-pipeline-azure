@@ -23,16 +23,16 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.DEV_AZURE_CREDENTIALS }}
-      # - name: Azure login
-      #   if: ${{ github.event.inputs.env == "stg" }}
-      #   uses: azure/login@v1
-      #   with:
-      #     creds: ${{ secrets.STG_AZURE_CREDENTIALS }}
-      # - name: Azure login
-      #   if: ${{ github.event.inputs.env == "prod" }}
-      #   uses: azure/login@v1
-      #   with:
-      #     creds: ${{ secrets.STG_AZURE_CREDENTIALS }}
+      - name: Azure login
+        if: ${{ github.event.inputs.env == 'stg' }}
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.STG_AZURE_CREDENTIALS }}
+      - name: Azure login
+        if: ${{ github.event.inputs.env == 'prod' }}
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.PRD_AZURE_CREDENTIALS }}
       - name: Initialize Terraform
         run: |
           make init ENV=${{ inputs.env }}
