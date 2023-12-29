@@ -1,0 +1,38 @@
+name: Deploy to ${{ inputs.env }}
+inputs:
+  env:
+    description: 'Name of Environment'
+    required: true
+    default: dev
+  GITHUB_TOKEN:
+    description: 'Github Token'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: hashicorp/setup-terraform@v3
+    - name: Azure login
+      if: ${{ inputs.env == "dev" }}
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.DEV_AZURE_CREDENTIALS }}
+    - name: Azure login
+      if: ${{ inputs.env == "stg" }}
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.STG_AZURE_CREDENTIALS }}
+    - name: Azure login
+      if: ${{ inputs.env == "prod" }}
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.STG_AZURE_CREDENTIALS }}
+    - name: Initialize Terraform
+      run: |
+        make init ENV=${{ inputs.env }}
+      shell: bash
+    - name: Terraform apply
+      run: |
+        make apply ENV=${{ inputs.env }}
+      shell: bash
+
