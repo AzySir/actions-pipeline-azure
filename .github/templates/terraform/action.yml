@@ -13,17 +13,17 @@ runs:
   steps:
     - uses: hashicorp/setup-terraform@v3
     - name: Azure login
-      if: ${{ inputs.env == "dev" }}
+      if: ${{ github.event.inputs.env == "dev" }}
       uses: azure/login@v1
       with:
         creds: ${{ secrets.DEV_AZURE_CREDENTIALS }}
     - name: Azure login
-      if: ${{ inputs.env == "stg" }}
+      if: ${{ github.event.inputs.env == "stg" }}
       uses: azure/login@v1
       with:
         creds: ${{ secrets.STG_AZURE_CREDENTIALS }}
     - name: Azure login
-      if: ${{ inputs.env == "prod" }}
+      if: ${{ github.event.inputs.env == "prod" }}
       uses: azure/login@v1
       with:
         creds: ${{ secrets.STG_AZURE_CREDENTIALS }}
