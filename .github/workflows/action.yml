@@ -17,8 +17,28 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Terraform
-        uses: ./.github/templates/terraform
-        with: 
-          env: ${{ github.event.inputs.env }}
+      - uses: hashicorp/setup-terraform@v3
+      - name: Azure login
+        if: github.event.inputs.env == "dev"
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.DEV_AZURE_CREDENTIALS }}
+      # - name: Azure login
+      #   if: ${{ github.event.inputs.env == "stg" }}
+      #   uses: azure/login@v1
+      #   with:
+      #     creds: ${{ secrets.STG_AZURE_CREDENTIALS }}
+      # - name: Azure login
+      #   if: ${{ github.event.inputs.env == "prod" }}
+      #   uses: azure/login@v1
+      #   with:
+      #     creds: ${{ secrets.STG_AZURE_CREDENTIALS }}
+      - name: Initialize Terraform
+        run: |
+          make init ENV=${{ inputs.env }}
+        shell: bash
+      - name: Terraform apply
+        run: |
+          make apply ENV=${{ inputs.env }}
+        shell: bash
 
